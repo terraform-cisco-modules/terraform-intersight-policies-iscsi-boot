@@ -10,7 +10,12 @@ locals {
 #____________________________________________________________
 
 data "intersight_organization_organization" "org_moid" {
-  name = var.organization
+  for_each = {
+    for v in [var.organization] : v => v if length(
+      regexall("[[:xdigit:]]{24}", var.organization)
+    ) == 0
+  }
+  name = each.value
 }
 
 data "intersight_ippool_pool" "ip" {
@@ -97,7 +102,11 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
   name               = var.name
   target_source_type = var.target_source_type
   organization {
-    moid        = data.intersight_organization_organization.org_moid.results[0].moid
+    moid = length(
+      regexall("[[:xdigit:]]{24}", var.organization)
+      ) > 0 ? var.organization : data.intersight_organization_organization.org_moid[
+      var.organization].results[0
+    ].moid
     object_type = "organization.Organization"
   }
   dynamic "initiator_ip_pool" {
