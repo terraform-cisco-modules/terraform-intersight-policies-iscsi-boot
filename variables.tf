@@ -75,6 +75,13 @@ variable "iscsi_adapter_policy" {
   type        = string
 }
 
+variable "iscsi_password" {
+  default     = ""
+  description = "Password, if doing authentication."
+  sensitive   = true
+  type        = string
+}
+
 variable "name" {
   default     = "default"
   description = "Name for the Policy."
@@ -84,13 +91,6 @@ variable "name" {
 variable "organization" {
   default     = "default"
   description = "Intersight Organization Name to Apply Policy to.  https://intersight.com/an/settings/organizations/."
-  type        = string
-}
-
-variable "iscsi_password" {
-  default     = ""
-  description = "Password, if doing authentication."
-  sensitive   = true
   type        = string
 }
 
