@@ -53,7 +53,7 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
       class_id              = "vnic.IscsiAuthProfile"
       is_password_set       = null
       object_type           = "vnic.IscsiAuthProfile"
-      password              = var.iscsi_password
+      password              = var.iscsi_boot_password
       user_id               = var.username
     }
     ] : var.target_source_type == "Static" ? [
@@ -62,7 +62,7 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
       class_id              = "vnic.IscsiAuthProfile"
       is_password_set       = null
       object_type           = "vnic.IscsiAuthProfile"
-      password              = var.iscsi_password
+      password              = var.iscsi_boot_password
       user_id               = var.username
     }
   ] : null
@@ -89,7 +89,7 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
       class_id              = "vnic.IscsiAuthProfile"
       is_password_set       = null
       object_type           = "vnic.IscsiAuthProfile"
-      password              = var.iscsi_password
+      password              = var.iscsi_boot_password
       user_id               = var.username
     }
     ] : var.target_source_type == "Static" ? [

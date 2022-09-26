@@ -75,7 +75,7 @@ variable "iscsi_adapter_policy" {
   type        = string
 }
 
-variable "iscsi_password" {
+variable "iscsi_boot_password" {
   default     = ""
   description = "Password, if doing authentication."
   sensitive   = true
