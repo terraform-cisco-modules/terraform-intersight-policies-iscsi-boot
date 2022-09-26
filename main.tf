@@ -1,8 +1,3 @@
-locals {
-  static_targets = {
-    for v in compact([var.primary_target_policy, var.secondary_target_policy]) : v => v
-  }
-}
 #____________________________________________________________
 #
 # Intersight Organization Data Source
@@ -12,25 +7,33 @@ locals {
 data "intersight_organization_organization" "org_moid" {
   for_each = {
     for v in [var.organization] : v => v if length(
-      regexall("[[:xdigit:]]{24}", var.organization)
-    ) == 0
+    regexall("[[:xdigit:]]{24}", var.organization)) == 0
   }
   name = each.value
 }
 
 data "intersight_ippool_pool" "ip" {
-  for_each = { for v in compact([var.initiator_ip_pool]) : v => v }
-  name     = each.value
+  for_each = {
+    for v in compact([var.initiator_ip_pool]) : v => v if length(
+    regexall("[[:xdigit:]]{24}", v)) == 0
+  }
+  name = each.value
 }
 
 data "intersight_vnic_iscsi_adapter_policy" "iscsi_adapter" {
-  for_each = { for v in compact([var.iscsi_adapter_policy]) : v => v }
-  name     = each.value
+  for_each = {
+    for v in compact([var.iscsi_adapter_policy]) : v => v if length(
+    regexall("[[:xdigit:]]{24}", v)) == 0
+  }
+  name = each.value
 }
 
 data "intersight_vnic_iscsi_static_target_policy" "iscsi_static_targets" {
-  for_each = local.static_targets
-  name     = each.value
+  for_each = {
+    for v in compact([var.primary_target_policy, var.secondary_target_policy]) : v => v if length(
+    regexall("[[:xdigit:]]{24}", v)) == 0
+  }
+  name = each.value
 }
 
 #__________________________________________________________________
@@ -112,13 +115,17 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
   dynamic "initiator_ip_pool" {
     for_each = { for v in compact([var.initiator_ip_pool]) : v => v if var.target_source_type != "Auto" }
     content {
-      moid = data.intersight_ippool_pool.ip[initiator_ip_pool.value].results[0].moid
+      moid = length(
+        regexall("[[:xdigit:]]{24}", initiator_ip_pool.value)
+      ) > 0 ? initiator_ip_pool.value : data.intersight_ippool_pool.ip[initiator_ip_pool.value].results[0].moid
     }
   }
   dynamic "iscsi_adapter_policy" {
     for_each = { for v in compact([var.iscsi_adapter_policy]) : v => v }
     content {
-      moid = data.intersight_vnic_iscsi_adapter_policy.iscsi_adapter[
+      moid = length(
+        regexall("[[:xdigit:]]{24}", iscsi_adapter_policy.value)
+        ) > 0 ? iscsi_adapter_policy.value : data.intersight_vnic_iscsi_adapter_policy.iscsi_adapter[
         iscsi_adapter_policy.value].results[0
       ].moid
     }
@@ -126,7 +133,9 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
   dynamic "primary_target_policy" {
     for_each = { for v in compact([var.primary_target_policy]) : v => v if var.target_source_type != "Auto" }
     content {
-      moid = data.intersight_vnic_iscsi_static_target_policy.iscsi_static_targets[
+      moid = length(
+        regexall("[[:xdigit:]]{24}", primary_target_policy.value)
+        ) > 0 ? primary_target_policy.value : data.intersight_vnic_iscsi_static_target_policy.iscsi_static_targets[
         primary_target_policy.value].results[0
       ].moid
     }
@@ -134,7 +143,9 @@ resource "intersight_vnic_iscsi_boot_policy" "iscsi_boot" {
   dynamic "secondary_target_policy" {
     for_each = { for v in compact([var.secondary_target_policy]) : v => v if var.target_source_type != "Auto" }
     content {
-      moid = data.intersight_vnic_iscsi_static_target_policy.iscsi_static_targets[
+      moid = length(
+        regexall("[[:xdigit:]]{24}", secondary_target_policy.value)
+        ) > 0 ? secondary_target_policy.value : data.intersight_vnic_iscsi_static_target_policy.iscsi_static_targets[
         secondary_target_policy.value].results[0
       ].moid
     }
