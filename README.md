@@ -119,9 +119,6 @@ export TF_VAR_secretkeyfile="<secret-key-file-location>"
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
-| <a name="input_endpoint"></a> [endpoint](#input\_endpoint) | Intersight URL. | `string` | `"https://intersight.com"` | no |
-| <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
 | <a name="input_authentication"></a> [authentication](#input\_authentication) | When using Authentication which type of authentication should be used.<br>* chap - perform CHAP Authentication<br>* mutual\_chap - Perform Mutual CHAP Authentication. | `string` | `"chap"` | no |
 | <a name="input_description"></a> [description](#input\_description) | Description for the Policy. | `string` | `""` | no |
 | <a name="input_dhcp_vendor_id_iqn"></a> [dhcp\_vendor\_id\_iqn](#input\_dhcp\_vendor\_id\_iqn) | Auto target interface that is represented via the Initiator name or the DHCP vendor ID. The vendor ID can be up to 32 alphanumeric characters. | `string` | `""` | no |
