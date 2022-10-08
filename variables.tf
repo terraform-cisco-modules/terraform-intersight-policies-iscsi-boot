@@ -82,6 +82,12 @@ variable "iscsi_boot_password" {
   type        = string
 }
 
+variable "moids" {
+  default     = false
+  description = "Flag to Determine if pools and policies should be data sources or if they already defined as a moid."
+  type        = bool
+}
+
 variable "name" {
   default     = "default"
   description = "Name for the Policy."
@@ -92,6 +98,18 @@ variable "organization" {
   default     = "default"
   description = "Intersight Organization Name to Apply Policy to.  https://intersight.com/an/settings/organizations/."
   type        = string
+}
+
+variable "policies" {
+  default     = {}
+  description = "Map for Moid based Policies Sources."
+  type        = any
+}
+
+variable "pools" {
+  default     = {}
+  description = "Map for Moid based Pool Sources."
+  type        = any
 }
 
 variable "primary_target_policy" {
